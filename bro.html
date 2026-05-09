@@ -14,95 +14,83 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
 
-        /* خلفية الإضاءة المتحركة */
-        .background-glow {
+        /* إضاءة خضراء قوية في الخلفية */
+        .glow-bg {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0,255,127,0.1) 0%, rgba(0,0,0,1) 70%);
-            animation: pulseBg 4s infinite alternate;
+            background: radial-gradient(circle, rgba(0,255,0,0.15) 0%, rgba(0,0,0,1) 80%);
             z-index: -1;
+            animation: pulse 3s infinite alternate;
         }
 
-        @keyframes pulseBg {
-            0% { opacity: 0.5; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.1); }
+        @keyframes pulse {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
         }
 
-        /* نص الترحيب المتحرك */
+        /* خطوط الهكرز المتحركة */
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0));
+            background-size: 100% 4px, 3px 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         h1 {
-            color: #00ff7f;
-            font-size: 80px;
+            color: #00ff41; /* لون مصفوفة الماتركس */
+            font-size: 90px;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 40px;
-            text-shadow: 0 0 10px #00ff7f, 0 0 20px #00ff7f, 0 0 40px #00ff7f, 0 0 80px #00ff7f;
-            animation: flicker 2s infinite;
+            text-shadow: 0 0 10px #00ff41, 0 0 30px #00ff41, 0 0 60px #00ff41;
+            margin-bottom: 50px;
+            z-index: 2;
+            animation: flicker 1.5s infinite;
         }
 
         @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 10px #00ff7f, 0 0 20px #00ff7f, 0 0 40px #00ff7f; }
-            20%, 24%, 55% { text-shadow: none; }
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
         }
 
-        /* الزر الخرافي */
+        /* زر الدخول الخرافي */
         .btn {
             position: relative;
-            padding: 25px 60px;
-            font-size: 35px;
-            color: #00ff7f;
+            padding: 30px 80px;
+            font-size: 45px;
+            color: #00ff41;
             text-decoration: none;
-            background: transparent;
-            border: 3px solid #00ff7f;
-            border-radius: 50px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 4px solid #00ff41;
+            border-radius: 15px;
             font-weight: bold;
-            transition: 0.5s;
-            overflow: hidden;
-            box-shadow: 0 0 15px #00ff7f;
+            transition: 0.4s;
+            box-shadow: 0 0 20px #00ff41;
+            z-index: 2;
         }
 
         .btn:hover {
-            background: #00ff7f;
+            background: #00ff41;
             color: #000;
-            box-shadow: 0 0 50px #00ff7f;
+            box-shadow: 0 0 80px #00ff41;
             transform: scale(1.1);
         }
-
-        /* تأثيرات الخطوط اللي تمشي */
-        .lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(0deg, transparent 0%, rgba(0, 255, 127, 0.2) 50%, transparent 100%);
-            background-size: 100% 4px;
-            animation: moveLines 2s linear infinite;
-        }
-
-        @keyframes moveLines {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(4px); }
-        }
-
     </style>
 </head>
 <body>
-    <div class="background-glow"></div>
-    <div class="lines"></div>
+    <div class="glow-bg"></div>
+    <div class="scanlines"></div>
     
-    <h1> ( نورت ا( الموقع من صنع فهد! 🍿</h1>
+    <h1>نورت يا وحش! 🟢</h1>
     
     <a href="https://cinemana.shabakaty.com/home" class="btn">دخول سينمانا</a>
 
-    <script>
-        // إضافة تأثير بسيط عند التحميل
-        console.log("Welcome Fahad - RTX 4060 Mode Activated");
-    </script>
 </body>
 </html>
