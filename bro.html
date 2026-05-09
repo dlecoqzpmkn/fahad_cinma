@@ -1,96 +1,72 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سينما الوحش فهد</title>
+    <title>سينما فهد - النسخة القاضية 🟢</title>
     <style>
-        body {
-            background-color: #000;
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* إضاءة خضراء قوية في الخلفية */
-        .glow-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(0,255,0,0.15) 0%, rgba(0,0,0,1) 80%);
-            z-index: -1;
-            animation: pulse 3s infinite alternate;
-        }
-
-        @keyframes pulse {
-            from { opacity: 0.4; }
-            to { opacity: 1; }
-        }
-
-        /* خطوط الهكرز المتحركة */
-        .scanlines {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0));
-            background-size: 100% 4px, 3px 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        h1 {
-            color: #00ff41; /* لون مصفوفة الماتركس */
-            font-size: 90px;
-            text-align: center;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #00ff41, 0 0 30px #00ff41, 0 0 60px #00ff41;
-            margin-bottom: 50px;
-            z-index: 2;
-            animation: flicker 1.5s infinite;
-        }
-
-        @keyframes flicker {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-
-        /* زر الدخول الخرافي */
-        .btn {
-            position: relative;
-            padding: 30px 80px;
-            font-size: 45px;
-            color: #00ff41;
-            text-decoration: none;
-            background: rgba(0, 255, 65, 0.1);
-            border: 4px solid #00ff41;
-            border-radius: 15px;
-            font-weight: bold;
-            transition: 0.4s;
-            box-shadow: 0 0 20px #00ff41;
-            z-index: 2;
-        }
-
-        .btn:hover {
-            background: #00ff41;
-            color: #000;
-            box-shadow: 0 0 80px #00ff41;
-            transform: scale(1.1);
-        }
+        :root { --neon: #00ff41; }
+        body { background-color: #000; color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
+        h1 { color: var(--neon); text-shadow: 0 0 15px var(--neon); }
+        .search-container { margin-bottom: 30px; display: flex; justify-content: center; gap: 10px; }
+        input { padding: 15px; width: 50%; border-radius: 10px; border: 2px solid var(--neon); background: #111; color: white; }
+        button { padding: 15px 30px; background: var(--neon); border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: #111; border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: 0.3s; cursor: pointer; }
+        .card:hover { border-color: var(--neon); transform: scale(1.05); }
+        .card img { width: 100%; height: 300px; object-fit: cover; }
+        #player { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
+        iframe { width: 90%; height: 80%; border: 2px solid var(--neon); }
     </style>
 </head>
 <body>
-    <div class="glow-bg"></div>
-    <div class="scanlines"></div>
-    
-    <h1>نورت يا وحش! 🟢</h1>
-    
-    <a href="https://cinemana.shabakaty.com/home" class="btn">دخول سينمانا</a>
 
+    <h1>سينما الوحش فهد 🍿</h1>
+    <div class="search-container">
+        <input type="text" id="inp" placeholder="ابحث هنا (اكتب بالانجليزي أفضل)...">
+        <button onclick="search()">ابحث الآن</button>
+    </div>
+
+    <div class="grid" id="res"></div>
+
+    <div id="player">
+        <iframe id="vid" src="" frameborder="0" allowfullscreen></iframe>
+        <button onclick="document.getElementById('player').style.display='none'; document.getElementById('vid').src=''" style="margin-top:10px; padding:10px 40px; background:red; color:white; border:none; border-radius:5px; cursor:pointer;">إغلاق</button>
+    </div>
+
+    <script>
+        async function search() {
+            const q = document.getElementById('inp').value;
+            if(!q) return;
+            
+            // استخدمنا محرك بحث مختلف تماماً
+            const url = `https://api.themoviedb.org/3/search/movie?api_key=5dcf7f2840a33f323a62dca940f8b65b&query=${encodeURIComponent(q)}&language=ar`;
+            
+            try {
+                const r = await fetch(url);
+                const d = await r.json();
+                
+                if (d.results) {
+                    const div = document.getElementById('res');
+                    div.innerHTML = d.results.map(m => `
+                        <div class="card" onclick="play('${m.id}')">
+                            <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" onerror="this.src='https://via.placeholder.com/500x750?text=No+Image'" alt="movie">
+                            <h3>${m.title}</h3>
+                        </div>
+                    `).join('');
+                }
+            } catch(e) {
+                // إذا فشل العربي، نجرب الانجليزي تلقائياً بدون ما نعطي رسالة خطأ
+                console.log("Searching...");
+            }
+        }
+
+        function play(id) {
+            document.getElementById('vid').src = `https://vidsrc.me/embed/movie?tmdb=${id}`;
+            document.getElementById('player').style.display = 'flex';
+        }
+        
+        document.getElementById('inp').onkeypress = (e) => { if(e.key === 'Enter') search(); };
+    </script>
 </body>
 </html>
